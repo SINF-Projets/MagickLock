@@ -31,6 +31,9 @@ class Snake:
     def generate_rewards(self):
         """Generate a new reward on the grid
         """
+        coords = [random.randint(2, 7), random.randint(2, 7)]
+        while coords in self.snake_parts:
+            coords = [random.randint(2, 7), random.randint(2, 7)]
         self.rewards.append([random.randint(2, 7), random.randint(2, 7)])
     
     def check_password_hash(self):
@@ -114,3 +117,7 @@ class Snake:
                 if len(self.rewards) == 0:
                     self.generate_rewards()
                 last_time = time.time()
+
+sense = SenseHat()
+snake = Snake(sense)
+snake.run()
