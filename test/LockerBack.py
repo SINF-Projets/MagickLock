@@ -1,12 +1,11 @@
-# Projet 3 - Test-locker-back
-#
-# Name : Dewilde   Alexandre            Noma :  24572000
-#        Dubois    Arnaud                       82622000
-#        Dubois    Brieuc                       23752000
-#        Duquesne  Vincent                      08032000
-#
-#
-# Date : November - December 2020
+#!/usr/bin/python3
+# -*- coding: utf-8 -*
+
+#  This module deals with the UI of the locker.
+#  @author Vincent Duquesne
+#  @date Created on 26/11/2020
+#  @date Last modification on 29/11/2020
+#  @version 1.0.1
 
 import unittest
 import LocklearBack as lb
@@ -14,17 +13,9 @@ import LocklearBack as lb
 
 class TestLockerBack (unittest.TestCase):
 
-"""
-    Test class LockerBack and its methods.
-
-    @autor : Duquesne Vincent
-    @date : 26 November 2020
-
-"""
-
     def setUp(self):
         
-        """  """
+        """ Unit test initialization method """
         
         self.l = lb.LockerBack("LockTest")
 
