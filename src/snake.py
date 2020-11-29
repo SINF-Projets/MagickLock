@@ -1,3 +1,12 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*
+
+#  This module deals with the snake game
+#  @author Alexandre Dewilde
+#  @date Created on 26/11/2020
+#  @date Last modification on 29/11/2020
+#  @version 0.1.1
+
 import random
 import time
 from sense_hat import SenseHat
@@ -18,6 +27,7 @@ class Snake:
         self.direction = "up"
         self.actions = []
 
+
     def take_events(self, events):
         """Takes a list of events in input and apply the last to the snake
 
@@ -28,6 +38,7 @@ class Snake:
             self.actions.extend(events)
             self.direction = events[-1].direction
 
+
     def generate_rewards(self):
         """Generate a new reward on the grid
         """
@@ -35,8 +46,10 @@ class Snake:
         while coords in self.snake_parts:
             coords = [random.randint(2, 7), random.randint(2, 7)]
         self.rewards.append([random.randint(2, 7), random.randint(2, 7)])
-    
-    def check_password_hash(self):
+
+
+    def check_stop_game(self):
+        #TODO check if we have to stop the game to display the locker
         return False
 
     def move(self):
@@ -62,6 +75,7 @@ class Snake:
             new_pos[1] = 7
         self.snake_parts.append(new_pos)
 
+
     def check_case_for_reward(self):
         """Check if the head of the snake is eating a reward
         """
@@ -72,7 +86,8 @@ class Snake:
         else:
             # delete the last part of the snake
             del self.snake_parts[0]
-        
+
+
     def check_for_collide(self):
         """check if the snake has collide with himself
 
@@ -80,6 +95,7 @@ class Snake:
             bool: if the snake head collide with one pars of it
         """
         return self.snake_parts[-1] in self.snake_parts[:-1]
+
 
     def display(self):
         """Display all elements on screen (snake, rewards)
@@ -99,6 +115,7 @@ class Snake:
         """
         self.__init__(self.sense)
 
+
     def run(self):
         """Run the game
         """
@@ -106,18 +123,23 @@ class Snake:
         while True:
             #number of frames per second
             if (time.time() - 0.2) > last_time:
+                last_time = time.time()
                 self.take_events(self.sense.stick.get_events())
                 self.move()
                 self.check_case_for_reward()
                 self.display()
                 if self.check_for_collide():
+                    #Wait a bit to show the colission
                     time.sleep(0.5)
                     self.sense.show_message('GAME OVER', text_colour=[255, 0, 0])
                     self.reset()
                 if len(self.rewards) == 0:
                     self.generate_rewards()
-                last_time = time.time()
+                if self.check_stop_game():
+                    break
 
-sense = SenseHat()
-snake = Snake(sense)
-snake.run()
+
+if __name__ == "__main__":
+    sense = SenseHat()
+    snake = Snake(sense)
+    snake.run()
