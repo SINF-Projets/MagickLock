@@ -25,7 +25,20 @@ class Snake:
         self.length = 1
         self.rewards = []
         self.direction = "up"
+        #The special coords to unlock
+        self.special_coord = self.generate_special_coords()
         self.actions = []
+
+
+    def generate_special_coords(self):
+        """Generate random coords for the special coords to unlock the raspberry"""
+        special_coord = []
+        for _ in range(2):
+            coord = random.randint(1, 7)
+            while coord == 3:
+                coord = random.randint(1, 7)
+            special_coord.append(coord)
+        return special_coord
 
 
     def take_events(self, events):
@@ -39,6 +52,16 @@ class Snake:
             self.direction = events[-1].direction
 
 
+    def generate_random_colors(self):
+        """ Generate a screen with random colors and add the special color for the special coords"""
+        colors = [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for _ in range(32)]
+        grid = []
+        for color in colors:
+            grid.extend([color, color])
+        grid[self.special_coord[0] + (self.special_coord[1] * 8)] = (255, 233, 0)
+        self.sense.set_pixels(grid)
+
+
     def generate_rewards(self):
         """Generate a new reward on the grid
         """
@@ -49,8 +72,11 @@ class Snake:
 
 
     def check_stop_game(self):
-        #TODO check if we have to stop the game to display the locker
+        """check if we have to stop the game"""
+        if len(self.actions) < 15 and self.snake_parts[-1] == self.special_coord:
+            return True
         return False
+
 
     def move(self):
         """Move the snake according to the current direction
@@ -74,6 +100,7 @@ class Snake:
         elif new_pos[1] < 0:
             new_pos[1] = 7
         self.snake_parts.append(new_pos)
+        self.actions.append(new_pos)
 
 
     def check_case_for_reward(self):
@@ -119,10 +146,12 @@ class Snake:
     def run(self):
         """Run the game
         """
+        self.generate_random_colors()
+        time.sleep(4)
         last_time = time.time()
         while True:
             #number of frames per second
-            if (time.time() - 0.2) > last_time:
+            if (time.time() - 1) > last_time:
                 last_time = time.time()
                 self.take_events(self.sense.stick.get_events())
                 self.move()
