@@ -9,7 +9,7 @@
 
 import random
 import time
-# from sense_hat import SenseHat
+from sense_hat import SenseHat
 
 
 class Snake:
@@ -27,6 +27,7 @@ class Snake:
         self.direction = "up"
         #The special coords to unlock
         self.special_coord = self.generate_special_coords()
+        self.special_coord_color = tuple([random.randint(200, 255), random.randint(215, 230), random.randint(0, 10)])
         self.actions = []
 
 
@@ -54,11 +55,11 @@ class Snake:
 
     def generate_random_colors(self):
         """ Generate a screen with random colors and add the special color for the special coords"""
-        colors = [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for _ in range(32)]
+        colors = [(random.randint(0, 200), random.randint(0, 200), random.randint(0, 255)) for _ in range(32)]
         grid = []
         for color in colors:
             grid.extend([color, color])
-        grid[self.special_coord[0] + (self.special_coord[1] * 8)] = (255, 233, 0)
+        grid[self.special_coord[0] + (self.special_coord[1] * 8)] = self.special_coord_color
         self.sense.set_pixels(grid)
 
 
@@ -146,6 +147,7 @@ class Snake:
     def run(self):
         """Run the game
         """
+        self.sense.show_message('Snake', text_colour=self.special_coord_color)
         self.generate_random_colors()
         time.sleep(4)
         last_time = time.time()
