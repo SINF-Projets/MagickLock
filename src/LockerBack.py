@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*
 #  This module deals with the Back-end of the locker.
-#  @author Vincent Duquesne
+#  @authors Vincent Duquesne & Brieuc Dubois
 #  @date Created on 26/11/2020
 #  @date Last modification on 03/12/2020
 #  @version 1.0.5
@@ -9,9 +9,8 @@ import os
 import time
 from snake import Snake
 from lockerUI import LockerUI
-from lib.crypto import encode, decode, hashing
-from lib.file import delete, exists, read
-from sense_emu import SenseHat
+from crypto import encode, decode, hashing
+from sense_hat import SenseHat
 
 
 class LockerBack:
@@ -30,6 +29,7 @@ class LockerBack:
         :pre:
         :post:
         """
+        self.locker_ui.show_message('Please enter the password')
         password = self.locker_ui.ask_gesture_code()
 
         with open(self.password_secret, 'r') as file:
@@ -38,19 +38,19 @@ class LockerBack:
         if hashed_password == hashing(password):
             with open(self.cipher_file, 'r') as file:
                 cipher_text = file.read()
-            
+
             self.locker_ui.show_message(decode(password, cipher_text))
 
             return True
         else:
             self.wrong_counter += 1
-            
+
             if self.wrong_counter <= 3:
                 self.locker_ui.show_message("Wrong password, try again...")
             else:
                 self.delete_password_cipher()
                 self.locker_ui.show_message("Wrong password, Information Delete!")
-            
+
             return False
 
     def create_cipher_text(self):
@@ -59,23 +59,36 @@ class LockerBack:
         :pre:
         :post:
         """
-        text: str = self.locker_ui.ask_a_number_list()
-        code: str = self.locker_ui.ask_gesture_code()
+        text = str(self.locker_ui.ask_a_number_list())
+        self.locker_ui.show_message("Please set the password by moving the RPI and move joystick")
+        code = str(self.locker_ui.ask_gesture_code())
 
         with open(self.password_secret, "w") as file:
             file.write(hashing(code))
-        
+
         with open(self.cipher_file, "w") as file:
             file.write(encode(code, text))
 
-    def delete_password_cipher (self):
+    def delete_password_cipher(self):
         """
         Method for Deletes the message and the password
         :pre:
         :post:
         """
-        os.remove(self.password_secret)
-        os.remove(self.cipher_file)
+        with open(self.password_secret, 'w') as file:
+            file.write('')
+        with open(self.cipher_file, 'w') as file:
+            file.write('')
+
+    @staticmethod
+    def _file_exist(filename):
+        """ Check than the file exist """
+        try:
+            with open(filename, 'r') as file:
+                return bool(file.read().strip())
+        except:
+            return False
+        return True
 
     def run(self):
         """
@@ -90,7 +103,7 @@ class LockerBack:
         snake.run()
 
         while True:
-            if os.path.isfile(self.password_secret) and os.path.isfile(self.cipher_file):
+            if self._file_exist(self.password_secret) and self._file_exist(self.cipher_file):
                 if self.run_decrypt_password_and_cipher():
                     if self.locker_ui.ask_binary_question('Would you remove the message ?'):
                         self.delete_password_cipher()

@@ -7,6 +7,7 @@ Librairie de cryptographie rendue disponible pour le P3 du cours de LINFO1001.
 Attention: Cette librairie a été réalisée à des fins purement didactiques et ne peut en aucun cas être considérée comme une solution cryptographique viable pour un programme en dehors du contexte du cours LINFO1001.
 """
 
+
 def encode(key, plain_text):
 	"""
 	Chiffre un texte en utilisant une clé de chiffrement.
@@ -19,11 +20,13 @@ def encode(key, plain_text):
 	:return (str): le texte chiffré
 	"""
 	enc = []
+	key = str(key)
 	for i, e in enumerate(plain_text):
 		key_c = key[i % len(key)]
 		enc_c = chr((ord(e) + ord(key_c)) % 256)
 		enc.append(enc_c)
 	return "".join(enc)
+
 
 def decode(key, cipher_text):
 	"""
@@ -37,11 +40,13 @@ def decode(key, cipher_text):
 	:return (str): le texte décrypté
 	"""
 	dec = []
+	key = str(key)
 	for i, e in enumerate(cipher_text):
 		key_c = key[i % len(key)]
 		dec_c = chr((256 + ord(e) - ord(key_c)) % 256)
 		dec.append(dec_c)
 	return str("".join(dec))
+
 
 def hashing(string):
 	"""
@@ -68,6 +73,7 @@ def hashing(string):
 		return value
 
 	if string:
+		string = str(string)
 		x = ord(string[0]) << 7
 		m = 1000003
 		for c in string:

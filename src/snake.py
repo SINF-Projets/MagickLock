@@ -9,7 +9,7 @@
 
 import random
 import time
-# from sense_hat import SenseHat
+from sense_hat import SenseHat
 
 
 class Snake:

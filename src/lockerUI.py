@@ -7,7 +7,7 @@
 #  @date Last modification on 08/12/2020
 #  @version 1.1.0
 
-from senseHat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
+from sense_hat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
 
 
 def calculate_orientation(angle, precision=45):
@@ -72,13 +72,14 @@ class LockerUI(object):
             event = self.sense.stick.wait_for_event()
             if event.action == ACTION_PRESSED or event.action == ACTION_RELEASED:
                 if event.direction == 'middle':
-                    return total_score
+                    if total_score > 1:
+                        return total_score
                 else:
                     x, y, z = map(calculate_orientation, [x1 - x2 for (x1, x2) in zip(self.sense.get_gyroscope().values(), initial_gyroscope)])
                     score = (x << 6) + (y << 3) + z
                     score = (score << 2) + get_direction_id(event.direction)
                     total_score = (total_score << 11) + score
-                    print(score, total_score)
+                    # print(score, total_score)
 
     def ask_binary_question(self, question):
         self.show_message(question)
@@ -93,7 +94,6 @@ class LockerUI(object):
 
     def screen_saver(self):
         self.sense.stick.wait_for_event()
-
 
 
 """ Example of usage """
