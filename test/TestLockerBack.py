@@ -32,7 +32,12 @@ class TestLockerBack (unittest.TestCase):
             else:
                 self.assertEqual(self.l.wrong_counter, self.l.wrong_counter + 1)
                 if self.l.wrong_counter > 3:
-                    self.assertIsNone(self.l.password_secret)
+                    with open(self.l.password_secret, 'r') as file:
+                        ps = file.read()
+                        self.assertEqual(ps, '')
+                    with open(self.l.cipher_file, 'w') as file:
+                        c = file.read()
+                        self.assertEqual(c, '')
                 self.assertFalse(x)
 
 
@@ -51,9 +56,16 @@ class TestLockerBack (unittest.TestCase):
 
 
     def test_delete_password_cipher(self):
+
         self.l.delete_password_cipher()
-        self.assertIsNone(self.l.password_secret)
-        self.assertIsNone(self.l.cipher_file)
+        with open(self.l.password_secret, 'r') as file:
+            ps = file.read()
+            self.assertEqual(ps, '')
+        with open(self.l.cipher_file, 'w') as file:
+            c = file.read()
+            self.assertEqual(c, '')
+        """self.assertIsNone(self.l.password_secret)
+        self.assertIsNone(self.l.cipher_file)"""
 
 
     
