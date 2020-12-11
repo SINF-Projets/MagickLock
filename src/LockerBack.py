@@ -9,7 +9,7 @@ import os
 import time
 from snake import Snake
 from lockerUI import LockerUI
-from crypto import encode, decode, hashing
+from lib.crypto import encode, decode, hashing
 from sense_hat import SenseHat
 
 
@@ -23,14 +23,15 @@ class LockerBack:
         self.password_secret = password_secret
         self.cipher_file = cipher_file
 
-    def run_decrypt_password_and_cipher(self):
+    def run_decrypt_password_and_cipher(self, password=None):
         """
         Method for decrypting the password
         :pre:
         :post:
         """
-        self.locker_ui.show_message('Please enter the password')
-        password = self.locker_ui.ask_gesture_code()
+        if password is None:
+            self.locker_ui.show_message('Please enter the password')
+            password = self.locker_ui.ask_gesture_code()
 
         with open(self.password_secret, 'r') as file:
             hashed_password = file.read()
@@ -53,15 +54,17 @@ class LockerBack:
 
             return False
 
-    def create_cipher_text(self):
+    def create_cipher_text(self, text=None, code=None):
         """
         Method for create a cipher text
         :pre:
         :post:
         """
-        text = str(self.locker_ui.ask_a_number_list())
-        self.locker_ui.show_message("Please set the password by moving the RPI and move joystick")
-        code = str(self.locker_ui.ask_gesture_code())
+        if text is None:
+            text = str(self.locker_ui.ask_a_number_list())
+        if code is None:
+            self.locker_ui.show_message("Please set the password by moving the RPI and move joystick")
+            code = str(self.locker_ui.ask_gesture_code())
 
         with open(self.password_secret, "w") as file:
             file.write(hashing(code))

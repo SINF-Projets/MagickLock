@@ -12,7 +12,7 @@ import sys
 import os
 sys.path.append("../src")
 from LockerBack import LockerBack
-import lib
+from lib.crypto import hashing, encode
 
 class TestLockerBack (unittest.TestCase):
 
@@ -22,7 +22,8 @@ class TestLockerBack (unittest.TestCase):
     
 
     def run_decrypt_password_and_cipher(self):
-        x = self.l.decrypt_password_and_cipher(password="Salut ça va")
+        password = "Salut ça va"
+        x = self.l.decrypt_password_and_cipher(password)
         with open(self.l.password_secret, 'r') as file:
             hashed_password = file.read()
             self.assertNotEqual(hashed_password, "")
@@ -37,7 +38,9 @@ class TestLockerBack (unittest.TestCase):
 
 
     def test_create_cipher_text(self):
-        self.l.create_cipher_text(text="regarde à droite", code="Salut ça va")
+        text = "regarde à droite"
+        code = "Salut ça va"
+        self.l.create_cipher_text(text, code)
         with open(self.l.password_secret, "r") as file:
             c = file.read()
             self.assertEqual(c, hashing(code))
@@ -54,14 +57,6 @@ class TestLockerBack (unittest.TestCase):
 
 
     
-
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)  
