@@ -10,9 +10,10 @@
 import unittest
 import sys
 import os
-sys.path.append("../src")
+sys.path.append(os.path.abspath('../src'))
 from LockerBack import LockerBack
 from lib.crypto import hashing, encode
+
 
 class TestLockerBack (unittest.TestCase):
 
@@ -23,6 +24,7 @@ class TestLockerBack (unittest.TestCase):
 
     def run_decrypt_password_and_cipher(self):
         password = "Salut ça va"
+        v = self.l.wrong_counter
         x = self.l.decrypt_password_and_cipher(password)
         with open(self.l.password_secret, 'r') as file:
             hashed_password = file.read()
@@ -30,7 +32,7 @@ class TestLockerBack (unittest.TestCase):
             if hashed_password == hashing(password):
                 self.assertTrue(x)
             else:
-                self.assertEqual(self.l.wrong_counter, self.l.wrong_counter + 1)
+                self.assertEqual(self.l.wrong_counter, v + 1)
                 if self.l.wrong_counter > 3:
                     with open(self.l.password_secret, 'r') as file:
                         ps = file.read()
