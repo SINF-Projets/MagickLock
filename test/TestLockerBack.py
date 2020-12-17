@@ -23,12 +23,16 @@ class TestLockerBack (unittest.TestCase):
     
 
     def test_run_decrypt_password_and_cipher(self):
+        """
+        Method to test the method run_decrypt_password_and_cipher
+        pre:
+        post:
+        """
         password = "salut"
         v = self.l.wrong_counter
         x = self.l.run_decrypt_password_and_cipher(password)
         with open(self.l.password_secret, 'r') as file:
             hashed_password = file.read()
-            """self.assertNotEqual(hashed_password, "")"""
             if hashed_password == hashing(password):
                 self.assertTrue(x)
             else:
@@ -45,6 +49,11 @@ class TestLockerBack (unittest.TestCase):
 
 
     def test_create_cipher_text(self):
+        """
+        Method to test the method create_cipher_text
+        pre:
+        post:
+        """
         text = "bonjour"
         code = "salut"
         self.l.create_cipher_text(text, code)
@@ -58,7 +67,11 @@ class TestLockerBack (unittest.TestCase):
 
 
     def test_delete_password_cipher(self):
-
+        """
+        Method to test the method delete_password_cipher
+        pre:
+        post:
+        """
         self.l.delete_password_cipher()
         with open(self.l.password_secret, 'r') as file:
             ps = file.read()
