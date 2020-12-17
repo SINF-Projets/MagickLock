@@ -8,18 +8,25 @@
 import os
 import time
 from snake import Snake
-from lockerUI import LockerUI
 from lib.crypto import encode, decode, hashing
-from sense_hat import SenseHat
+try:
+    from sense_hat import SenseHat
+except Exception as err:
+    print(f'Cannot import module SenseHat, for the following reasons: {err}')
+
+try:
+    from lockerUI import LockerUI
+except Exception as err:
+    print(f'The following error occured while importing the UI: {err}')
 
 
 class LockerBack:
-    def __init__(self, sense_hat=SenseHat(), password_secret='secret.txt', cipher_file='cipher.txt'):
+    def __init__(self, sense_hat=None, locker_ui=None, password_secret='secret.txt', cipher_file='cipher.txt'):
         """ Initialization method """
         self.sense_hat = sense_hat
         self.wrong_counter = 0
         self.snake = Snake(sense_hat)
-        self.locker_ui = LockerUI(sense_hat)
+        self.locker_ui = locker_ui
         self.password_secret = password_secret
         self.cipher_file = cipher_file
 
@@ -40,17 +47,21 @@ class LockerBack:
             with open(self.cipher_file, 'r') as file:
                 cipher_text = file.read()
 
-            self.locker_ui.show_message(decode(password, cipher_text))
+            # Show the secret message to the user
+            if self.locker_ui is not None:
+                self.locker_ui.show_message(decode(password, cipher_text))
 
             return True
         else:
             self.wrong_counter += 1
 
             if self.wrong_counter <= 3:
-                self.locker_ui.show_message("Wrong password, try again...")
+                if self.locker_ui is not None:
+                    self.locker_ui.show_message("Wrong password, try again...")
             else:
                 self.delete_password_cipher()
-                self.locker_ui.show_message("Wrong password, Information Delete!")
+                if self.locker_ui is not None:
+                    self.locker_ui.show_message("Wrong password, Information Delete!")
 
             return False
 
@@ -116,5 +127,6 @@ class LockerBack:
 
 
 if __name__ == '__main__':
-    lockerBack = LockerBack()
+    sense_hat = SenseHat()
+    lockerBack = LockerBack(sense_hat=sense_hat, locker_ui=LockerUI(sense_hat))
     lockerBack.run()

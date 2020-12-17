@@ -1,3 +1,6 @@
 /Pipfile
 /Pipfile.lock
 /.vscode/
+*.pyc
+test/cipher.txt
+test/secret.txt

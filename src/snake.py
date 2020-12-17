@@ -9,7 +9,6 @@
 
 import random
 import time
-from sense_hat import SenseHat
 
 
 class Snake:
@@ -171,6 +170,8 @@ class Snake:
 
 
 if __name__ == "__main__":
+    # import sense hat when executing this as the main file 
+    from sense_hat import SenseHat
     sense = SenseHat()
     snake = Snake(sense)
     snake.run()
