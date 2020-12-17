@@ -4,8 +4,8 @@
 #  This module deals with the UI of the locker.
 #  @author Arnaud Dubois
 #  @date Created on 26/11/2020
-#  @date Last modification on 03/12/2020
-#  @version 1.0.2
+#  @date Last modification on 17/12/2020
+#  @version 1.0.9
 
 import unittest
 import sys
@@ -22,13 +22,13 @@ class TestLockerBack (unittest.TestCase):
 
     
 
-    def run_decrypt_password_and_cipher(self):
-        password = "Salut ça va"
+    def test_run_decrypt_password_and_cipher(self):
+        password = "salut"
         v = self.l.wrong_counter
-        x = self.l.decrypt_password_and_cipher(password)
+        x = self.l.run_decrypt_password_and_cipher(password)
         with open(self.l.password_secret, 'r') as file:
             hashed_password = file.read()
-            self.assertNotEqual(hashed_password, "")
+            """self.assertNotEqual(hashed_password, "")"""
             if hashed_password == hashing(password):
                 self.assertTrue(x)
             else:
@@ -45,8 +45,8 @@ class TestLockerBack (unittest.TestCase):
 
 
     def test_create_cipher_text(self):
-        text = "regarde à droite"
-        code = "Salut ça va"
+        text = "bonjour"
+        code = "salut"
         self.l.create_cipher_text(text, code)
         with open(self.l.password_secret, "r") as file:
             c = file.read()
@@ -63,11 +63,10 @@ class TestLockerBack (unittest.TestCase):
         with open(self.l.password_secret, 'r') as file:
             ps = file.read()
             self.assertEqual(ps, '')
-        with open(self.l.cipher_file, 'w') as file:
+        with open(self.l.cipher_file, 'r') as file:
             c = file.read()
             self.assertEqual(c, '')
-        """self.assertIsNone(self.l.password_secret)
-        self.assertIsNone(self.l.cipher_file)"""
+        
 
 
     
