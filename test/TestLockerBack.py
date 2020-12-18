@@ -25,8 +25,6 @@ class TestLockerBack (unittest.TestCase):
     def test_run_decrypt_password_and_cipher(self):
         """
         Method to test the method run_decrypt_password_and_cipher
-        pre:
-        post:
         """
         password = "salut"
         v = self.l.wrong_counter
@@ -51,8 +49,6 @@ class TestLockerBack (unittest.TestCase):
     def test_create_cipher_text(self):
         """
         Method to test the method create_cipher_text
-        pre:
-        post:
         """
         text = "bonjour"
         code = "salut"
@@ -69,8 +65,6 @@ class TestLockerBack (unittest.TestCase):
     def test_delete_password_cipher(self):
         """
         Method to test the method delete_password_cipher
-        pre:
-        post:
         """
         self.l.delete_password_cipher()
         with open(self.l.password_secret, 'r') as file:
