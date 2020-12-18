@@ -12,12 +12,12 @@ from lib.crypto import encode, decode, hashing
 try:
     from sense_hat import SenseHat
 except Exception as err:
-    print(f'Cannot import module SenseHat, for the following reasons: {err}')
+    print('Cannot import module SenseHat, for the following reasons: {}'.format(err))
 
 try:
     from lockerUI import LockerUI
 except Exception as err:
-    print(f'The following error occured while importing the UI: {err}')
+    print('The following error occured while importing the UI: {}'.format(err))
 
 
 class LockerBack:
